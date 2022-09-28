@@ -77,18 +77,18 @@ def main(config):
                           normalize=True,
                           nrow=6)
 
-        try:
-            samples = model.sample(36,
-                                   device,
-                                   labels=test_label)
-            vutils.save_image(samples.cpu().data,
-                              os.path.join(
-                "Samples",
-                f"{logger.name}.png"),
-                normalize=True,
-                nrow=6)
-        except Warning:
-            pass
+        # try:
+        #     samples = model.sample(36,
+        #                            device,
+        #                            labels=test_label)
+        #     vutils.save_image(samples.cpu().data,
+        #                       os.path.join(
+        #         "Samples",
+        #         f"{logger.name}.png"),
+        #         normalize=True,
+        #         nrow=6)
+        # except Warning:
+        #     pass
 
     n_samples = len(data_loader.sampler)
     log = {'loss': total_loss / n_samples}
