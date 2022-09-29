@@ -4,7 +4,7 @@ from torch import nn
 from torch.nn import functional as F
 from hypmath import WrappedNormal, poincareball
 from .types_ import *
-import geoopt
+from geoopt.manifolds import Lorentz
 
 
 class VanillaVAE(BaseModel):
@@ -12,7 +12,6 @@ class VanillaVAE(BaseModel):
     def __init__(self,
                  in_channels: int,
                  latent_dims: int,
-                 manifold: str,
                  hidden_dims: List[int] = None,
                  **kwargs) -> None:
         """Instantiates the VAE model
@@ -23,13 +22,8 @@ class VanillaVAE(BaseModel):
             hidden_dims (List[int]): List of hidden dimensions
         """
         super(VanillaVAE, self).__init__()
-
         self.latent_dim = latent_dims
-        if manifold == "poincare":
-            self.manifold = poincareball.PoincareBall(self.latent_dim)
-
-        if manifold == "lorentz":
-            self.manifold = geoopt.manifolds.Lorentz(self.latent_dim)
+        self.manifold = poincareball.PoincareBall(self.latent_dim)
 
         modules = []
         if hidden_dims is None:
