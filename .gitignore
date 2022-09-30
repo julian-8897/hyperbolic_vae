@@ -102,6 +102,7 @@ ENV/
 
 # input data, saved log, checkpoints
 data/
+data_wiki/
 input/
 saved/
 datasets/

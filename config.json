@@ -9,12 +9,12 @@
         }
     },
     "data_loader": {
-        "type": "CelebDataLoader",
+        "type": "WIKIDataLoader",
         "args": {
-            "data_dir": "data/",
+            "data_dir": "data_wiki/",
             "batch_size": 64,
             "shuffle": true,
-            "validation_split": 0.2,
+            "validation_split": 0.0,
             "num_workers": 2
         }
     },
