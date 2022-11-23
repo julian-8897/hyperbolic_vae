@@ -166,7 +166,7 @@ class VanillaVAE(BaseModel):
         dist = WrappedNormal(mu, std, self.manifold)
         # z = torch.randn(num_samples,
         #                 self.latent_dim)
-        z = dist.sample()
+        z = dist.sample(sample_shape=torch.Size(num_samples))
         z = z.to(current_device)
         samples = self.decode(z)
 
