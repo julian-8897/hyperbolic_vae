@@ -103,7 +103,7 @@ def main(config):
 
         # Generating images from latent space
         try:
-            samples = model.sample(36,
+            samples = model.sample(6,
                                    device,
                                    labels=test_label)
             vutils.save_image(samples.cpu().data,
