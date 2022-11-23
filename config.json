@@ -9,9 +9,9 @@
         }
     },
     "data_loader": {
-        "type": "WIKIDataLoader",
+        "type": "CelebDataLoader",
         "args": {
-            "data_dir": "data_wiki/",
+            "data_dir": "data/",
             "batch_size": 64,
             "shuffle": true,
             "validation_split": 0.0,
@@ -36,7 +36,7 @@
         }
     },
     "trainer": {
-        "epochs": 10,
+        "epochs": 1,
         "save_dir": "saved/",
         "save_period": 1,
         "verbosity": 2,

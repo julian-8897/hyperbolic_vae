@@ -95,23 +95,25 @@ def main(config):
                           normalize=True,
                           nrow=6)
         # linear interpolation two chosen images
-        x_1 = test_input[1].to(device)
+        x_1 = test_input[3].to(device)
         x_1 = torch.unsqueeze(x_1, dim=0)
-        x_2 = test_input[2].to(device)
+        x_2 = test_input[4].to(device)
         x_2 = torch.unsqueeze(x_2, dim=0)
-        interpolate(model, x_1, x_2, n=10)
-        # try:
-        #     samples = model.sample(36,
-        #                            device,
-        #                            labels=test_label)
-        #     vutils.save_image(samples.cpu().data,
-        #                       os.path.join(
-        #         "Samples",
-        #         f"{logger.name}.png"),
-        #         normalize=True,
-        #         nrow=6)
-        # except Warning:
-        #     pass
+        interpolate(model, x_1, x_2, n=5)
+
+        # Generating images from latent space
+        try:
+            samples = model.sample(36,
+                                   device,
+                                   labels=test_label)
+            vutils.save_image(samples.cpu().data,
+                              os.path.join(
+                "Samples",
+                f"{logger.name}.png"),
+                normalize=True,
+                nrow=6)
+        except Warning:
+            pass
 
     n_samples = len(data_loader.sampler)
     log = {'loss': total_loss / n_samples}
