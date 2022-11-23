@@ -159,14 +159,14 @@ class VanillaVAE(BaseModel):
         Returns:
             samples (Tensor)
         """
-        mu = torch.zeros(self.latent_dim)
+        mu = self.manifold.expmap0(torch.zeros(self.latent_dim))
         mu = mu.to(current_device)
         std = torch.ones(self.latent_dim)
         std = std.to(current_device)
         dist = WrappedNormal(mu, std, self.manifold)
         # z = torch.randn(num_samples,
         #                 self.latent_dim)
-        z = dist.sample(sample_shape=torch.Size([num_samples, num_samples]))
+        z = dist.sample(shape=torch.Size([num_samples, num_samples]))
         z = z.to(current_device)
         samples = self.decode(z)
 
