@@ -1,6 +1,7 @@
 import argparse
 import numpy as np
 import torch
+from torch import nn
 from tqdm import tqdm
 import data_loader.data_loaders as module_data
 import model.loss as module_loss
@@ -12,6 +13,65 @@ from torchvision import transforms
 from torch.autograd import Variable
 import os
 import matplotlib.pyplot as plt
+from mpl_toolkits.axes_grid1 import ImageGrid
+
+
+def latent_traversal(model, fname, samples, n_changes=10, val_range=(-1, 1)):
+    """ This function perform latent traversal on a VAE latent space
+    model_path: str
+        The absolute path of the model to load
+    fname: str
+        The filename to use for saving the latent traversal
+    samples:
+        The list of data examples to provide as input of the model
+    n_changes: int
+        The number of changes to perform on one latent dimension
+    val_range: tuple
+        The range of values that can be set for one latent dimension
+    """
+    # TODO: change the next two lines to retrieve the output of your encoder with pytorch
+    # m = tf.keras.models.load_model(model_path)
+    z_base = model.encode(samples)[-1]
+    # END TODO
+    r, c = n_changes, z_base.shape[1]
+    vals = np.linspace(*val_range, r)
+    shape = samples[0].shape()
+    for j, z in enumerate(z_base):
+        imgs = np.empty([r * c, *shape])
+        for i in range(c):
+            z_iter = np.tile(z, [r, 1])
+            z_iter[:, i] = vals
+            imgs[r * i:(r * i) + r] = model.decode(z_iter)
+        plot_traversal(imgs, r, c, shape[-1] == 1, show=True)
+        save_figure(fname, tight=False)
+
+
+def plot_traversal(imgs, r, c, greyscale, show=False):
+    fig = plt.figure(figsize=(20., 20.))
+    grid = ImageGrid(fig, 111, nrows_ncols=(
+        r, c), axes_pad=0, direction="column")
+
+    for i, (ax, im) in enumerate(zip(grid, imgs)):
+        ax.set_axis_off()
+        if i % r == 0:
+            ax.set_title("z{}".format(i // r), fontdict={'fontsize': 25})
+        if greyscale is True:
+            ax.imshow(im, cmap="gray")
+        else:
+            ax.imshow(im)
+
+    fig.subplots_adjust(wspace=0, hspace=0)
+    if show is True:
+        plt.show()
+
+
+def save_figure(out_fname, dpi=300, tight=True):
+    if tight is True:
+        plt.tight_layout()
+    plt.savefig(out_fname, dpi=dpi, transparent=True)
+    plt.clf()
+    plt.cla()
+    plt.close()
 
 
 def interpolate(autoencoder, x_1, x_2, n=12):
@@ -114,6 +174,9 @@ def main(config):
                 nrow=6)
         except Warning:
             pass
+
+        # Latent Traversal
+        latent_traversal(model, 'Traversal/', test_input)
 
     n_samples = len(data_loader.sampler)
     log = {'loss': total_loss / n_samples}
